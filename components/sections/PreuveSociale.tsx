@@ -1,28 +1,58 @@
 "use client";
 
 import { useInView } from "@/lib/useInView";
-import { Ph } from "@/components/Placeholder";
 
 // §6 ligne 11 — Preuve sociale · mur de carreaux céramiques (opus).
-// Garanties retirées (info redondante avec le footer). Layout compact :
-// header + H2 + badge note Google à côté + mosaïque collée juste en dessous.
+// Avis Google récupérés directement depuis la fiche Google Maps de St O
+// Carrelages — 3 avis, tous 5 étoiles → note moyenne 5/5.
 
-const GOOGLE_MAPS_URL = "https://share.google/YBFTXYrvOjJxyBcfb";
+const GOOGLE_MAPS_URL = "https://share.google/0WqlRVdprrswbUnE4";
 
-type TestimonialSize = "lg" | "md" | "sm";
+type Testimonial = {
+  id: string;
+  auteur: string;
+  date: string;
+  note: number;
+  texte: string | null;
+  size: "lg" | "md" | "wide";
+  tilt: number;
+};
 
-const TESTIMONIALS: { id: string; size: TestimonialSize; tilt: number }[] = [
-  { id: "01", size: "lg", tilt: -0.2 },
-  { id: "02", size: "md", tilt: 0.3 },
-  { id: "03", size: "lg", tilt: 0.15 },
-  { id: "04", size: "sm", tilt: -0.3 },
-  { id: "05", size: "md", tilt: 0.2 },
+const TESTIMONIALS: Testimonial[] = [
+  {
+    id: "01",
+    auteur: "Jean Masson",
+    date: "Juin 2023",
+    note: 5,
+    texte:
+      "Monsieur GORET de la société « Saint O carrelages » m'a rénové du carrelage dans ma salle de bains. Durant ce chantier, j'ai pu constater sa ponctualité, sérieux, grand professionnalisme. La pose de ce carrelage démontre ses grandes…",
+    size: "lg",
+    tilt: -0.2,
+  },
+  {
+    id: "02",
+    auteur: "Quincaillerie Angles",
+    date: "Février 2021",
+    note: 5,
+    texte: "Très professionnel",
+    size: "md",
+    tilt: 0.3,
+  },
+  {
+    id: "03",
+    auteur: "Frédéric Vigier",
+    date: "Mai 2021",
+    note: 5,
+    texte: null, // note sans commentaire écrit
+    size: "wide",
+    tilt: -0.1,
+  },
 ];
 
-const SIZE_CLASS: Record<TestimonialSize, string> = {
-  lg: "md:col-span-7",
-  md: "md:col-span-5",
-  sm: "md:col-span-4",
+const SIZE_CLASS: Record<Testimonial["size"], string> = {
+  lg: "md:col-span-8",
+  md: "md:col-span-4",
+  wide: "md:col-span-12",
 };
 
 export function PreuveSociale() {
@@ -71,7 +101,7 @@ export function PreuveSociale() {
             <div>
               <div className="flex items-baseline gap-2">
                 <span className="display text-display-md leading-none tracking-tight">
-                  <Ph name="NOTE_GOOGLE" />
+                  5,0
                 </span>
                 <span className="tech-spec text-mute">/&nbsp;5</span>
               </div>
@@ -81,7 +111,7 @@ export function PreuveSociale() {
             </div>
             <div>
               <p className="tech-spec text-mute">
-                <Ph name="NB_AVIS_GOOGLE" />&nbsp;avis Google
+                3&nbsp;avis Google
               </p>
               <a
                 href={GOOGLE_MAPS_URL}
@@ -95,16 +125,14 @@ export function PreuveSociale() {
           </div>
         </div>
 
-        {/* Mosaïque opus — collée au-dessous du H2 */}
+        {/* Mosaïque opus — 3 carreaux, tailles mixtes */}
         <div className="mt-12">
           <div className="grid auto-rows-auto gap-4 md:grid-cols-12 md:gap-5">
             {TESTIMONIALS.map((t, i) => (
               <TestimonialTile
                 key={t.id}
-                id={t.id}
-                size={t.size}
-                tilt={t.tilt}
-                delay={500 + i * 70}
+                testimonial={t}
+                delay={500 + i * 80}
               />
             ))}
           </div>
@@ -115,16 +143,15 @@ export function PreuveSociale() {
 }
 
 function TestimonialTile({
-  id,
-  size,
-  tilt,
+  testimonial,
   delay,
 }: {
-  id: string;
-  size: TestimonialSize;
-  tilt: number;
+  testimonial: Testimonial;
   delay: number;
 }) {
+  const { size, tilt, note, texte, auteur, date } = testimonial;
+  const hasText = texte !== null;
+
   return (
     <div
       className={`${SIZE_CLASS[size]} reveal-fade`}
@@ -145,18 +172,30 @@ function TestimonialTile({
           className="pointer-events-none absolute -top-px -left-px h-1/2 w-1/2 bg-gradient-to-br from-paper-soft/60 to-transparent"
         />
 
-        <div className="relative flex h-full flex-col">
-          <Stars />
-          <blockquote className="display mt-5 flex-1 text-lede italic leading-[1.4] text-ink-soft md:mt-6">
-            «&nbsp;<Ph name={`AVIS_${id}_TEXTE`} />&nbsp;»
-          </blockquote>
-          <footer className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1 tech-spec text-mute">
+        <div
+          className={`relative flex h-full ${
+            hasText ? "flex-col" : "flex-col md:flex-row md:items-center md:justify-between md:gap-8"
+          }`}
+        >
+          <Stars count={note} />
+
+          {hasText && (
+            <blockquote className="display mt-5 flex-1 text-lede italic leading-[1.4] text-ink-soft md:mt-6">
+              «&nbsp;{texte}&nbsp;»
+            </blockquote>
+          )}
+
+          {!hasText && (
+            <p className="tech-spec mt-3 italic text-mute md:mt-0">
+              Note 5 étoiles sans commentaire écrit
+            </p>
+          )}
+
+          <footer className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1 tech-spec text-mute md:mt-6">
             <span>—</span>
-            <span className="text-ink-soft">
-              <Ph name={`AVIS_${id}_AUTEUR`} />
-            </span>
+            <span className="text-ink-soft">{auteur}</span>
             <span>·</span>
-            <Ph name={`AVIS_${id}_DATE`} />
+            <span>{date}</span>
           </footer>
         </div>
       </article>
@@ -166,7 +205,7 @@ function TestimonialTile({
 
 function Stars({ count = 5 }: { count?: number }) {
   return (
-    <div className="flex gap-1" aria-hidden="true">
+    <div className="flex gap-1" aria-label={`${count} étoiles sur 5`}>
       {Array.from({ length: count }).map((_, i) => (
         <svg
           key={i}
