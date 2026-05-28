@@ -133,7 +133,7 @@ export function Collections() {
       className="relative md:flex md:h-screen md:flex-col md:overflow-hidden"
       aria-labelledby="collections-title"
     >
-      {/* En-tête éditorial compact — prend juste la place qu'il faut */}
+      {/* En-tête compact */}
       <div className="mx-auto w-full max-w-(--container-wide) px-6 pt-section-md pb-4 md:px-12 md:pt-24 md:pb-3">
         <div className="flex items-baseline justify-between pb-3">
           <p className="section-index">03 &nbsp;—&nbsp; Collections</p>
@@ -153,29 +153,28 @@ export function Collections() {
           </p>
         </div>
 
-        {/* Indice de geste sur desktop uniquement */}
-        {!reduce && (
-          <p className="tech-spec mt-4 hidden text-mute md:block">
-            ↓ &nbsp;Défilez pour parcourir les onze familles &nbsp;→
-          </p>
-        )}
+        {/* Indice de geste — différencié mobile/desktop */}
+        <p className="tech-spec mt-4 text-mute">
+          <span className="md:hidden">← Glissez pour parcourir les 11 familles →</span>
+          {!reduce && (
+            <span className="hidden md:inline">
+              ↓ &nbsp;Défilez pour parcourir les onze familles &nbsp;→
+            </span>
+          )}
+        </p>
       </div>
 
-      {/* Track : flex-col sur mobile, flex-row qui occupe TOUT l'espace
-          restant du viewport sur desktop (flex-1 dans la section h-screen) */}
-      <div className="overflow-hidden md:flex-1">
+      {/* Track : sur mobile = swipe horizontal natif avec snap-x ;
+          sur desktop = pin GSAP qui translate au scroll vertical */}
+      <div className="overflow-x-auto snap-x snap-mandatory scroll-smooth pb-section-sm md:flex-1 md:overflow-hidden md:snap-none md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div
           ref={trackRef}
-          className={
-            reduce
-              ? "flex flex-col gap-section-sm px-6 pb-section-lg"
-              : "flex flex-col gap-section-sm px-6 pb-section-lg md:h-full md:flex-row md:gap-0 md:px-0 md:pb-0"
-          }
+          className="flex h-full gap-4 px-6 md:gap-0 md:px-0"
         >
           {COLLECTIONS.map((c, i) => (
             <article
               key={c.name}
-              className="flex shrink-0 flex-col gap-4 md:h-full md:w-[40vw] md:max-w-[520px] md:px-6 md:py-8 md:gap-5 lg:w-[34vw]"
+              className="flex shrink-0 snap-start flex-col gap-3 w-[78vw] sm:w-[60vw] md:h-full md:w-[40vw] md:max-w-[520px] md:px-6 md:py-8 md:gap-5 lg:w-[34vw]"
             >
               <div className="flex items-baseline gap-6">
                 <span className="section-index">
@@ -184,15 +183,16 @@ export function Collections() {
                 <span className="label-caps text-mute">Famille</span>
               </div>
 
-              {/* Carreau — aspect 4/3 sur mobile pour explicit height,
-                  flex-1 sur desktop pour remplir l'espace dispo dans la card */}
-              <div className="tile-hover relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:flex-1 md:min-h-0">
+              {/* Carreau — aspect 4/3 sur mobile, flex-1 sur desktop.
+                  bg-rule pour avoir un placeholder beige pendant le chargement. */}
+              <div className="tile-hover relative aspect-[4/3] w-full overflow-hidden bg-rule/40 md:aspect-auto md:flex-1 md:min-h-0">
                 <Image
                   src={asset(c.image)}
                   alt={c.name}
                   fill
-                  sizes="(min-width: 1024px) 35vw, (min-width: 768px) 40vw, 100vw"
+                  sizes="(min-width: 1024px) 35vw, (min-width: 768px) 40vw, 80vw"
                   className="object-cover"
+                  priority={i < 2}
                 />
               </div>
 
