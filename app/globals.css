@@ -43,13 +43,15 @@
   --text-label: 0.75rem; /* petites capitales / fiches techniques */
   --text-micro: 0.6875rem;
 
-  /* ---- ESPACEMENT VERTICAL (§4.3) -------------------------------------- */
-  /* Sections très aérées en desktop — 120–200 px de respiration. */
-  --spacing-section-xs: 3rem; /* 48 px */
-  --spacing-section-sm: 5rem; /* 80 px */
-  --spacing-section-md: 8rem; /* 128 px */
-  --spacing-section-lg: 12rem; /* 192 px — défaut desktop */
-  --spacing-section-xl: 16rem; /* 256 px — drame */
+  /* ---- ESPACEMENT VERTICAL ---------------------------------------------- */
+  /* Tokens compactés (~45 % de réduction par rapport à la grille éditoriale
+     initiale) pour que le scroll mobile reste agréable et qu'on ne perde
+     pas le fil de lecture entre les sections. */
+  --spacing-section-xs: 1.5rem; /* 24 px (était 48) */
+  --spacing-section-sm: 2.5rem; /* 40 px (était 80) */
+  --spacing-section-md: 4rem; /* 64 px (était 128) */
+  --spacing-section-lg: 5.5rem; /* 88 px (était 192) */
+  --spacing-section-xl: 7rem; /* 112 px (était 256) */
 
   /* Conteneurs. */
   --container-prose: 65ch;
