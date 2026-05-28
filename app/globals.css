@@ -1,0 +1,378 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   DESIGN SYSTEM — single source of truth (§4 du brief)
+   Tout token = variable CSS exposée à Tailwind v4 via @theme.
+   Aucune valeur Tailwind par défaut n'est utilisée à la place.
+   --------------------------------------------------------------------------- */
+
+@theme {
+  /* ---- COULEURS (§4.1) -------------------------------------------------- */
+  /* Blanc papier chaud — fond principal. Jamais #FFFFFF froid. */
+  --color-paper: #f6f4f0;
+  /* Noir profond chaud — sections « drame ». */
+  --color-ink: #121110;
+  /* Encre sur papier / papier sur encre — pour le texte. */
+  --color-ink-soft: #1a1916;
+  --color-paper-soft: #f6f4f0;
+  /* Gris chaud secondaire — légendes, texte mineur. */
+  --color-mute: #8a8478;
+  /* Accent terre cuite — UNIQUEMENT par petites touches (lien, état actif). */
+  --color-terracotta: #b0522f;
+  /* Accent alternatif ocre — réserve, à utiliser au lieu du terracotta si besoin. */
+  --color-ochre: #c08a3e;
+  /* Filets / séparateurs très discrets. */
+  --color-rule: #e5e0d6;
+  --color-rule-dark: #2a2724;
+
+  /* ---- TYPOGRAPHIE (§4.2) ---------------------------------------------- */
+  /* Variables alimentées par next/font dans layout.tsx. */
+  --font-display: var(--font-display-source), "Times New Roman", Georgia, serif;
+  --font-body: var(--font-body-source), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono-source), ui-monospace, SFMono-Regular, monospace;
+
+  /* Échelle éditoriale — clamp() pour fluidité du mobile au desktop large. */
+  --text-display-2xl: clamp(4.5rem, 12vw, 11rem); /* hero hors-norme */
+  --text-display-xl: clamp(3.5rem, 9vw, 8rem); /* hero standard */
+  --text-display-lg: clamp(2.75rem, 6.5vw, 5.5rem); /* titre de section */
+  --text-display-md: clamp(2rem, 4.5vw, 3.5rem); /* sous-titre */
+  --text-display-sm: clamp(1.5rem, 3vw, 2.25rem); /* h3 éditorial */
+  --text-lede: clamp(1.125rem, 1.6vw, 1.375rem); /* chapeau / intro */
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-label: 0.75rem; /* petites capitales / fiches techniques */
+  --text-micro: 0.6875rem;
+
+  /* ---- ESPACEMENT VERTICAL (§4.3) -------------------------------------- */
+  /* Sections très aérées en desktop — 120–200 px de respiration. */
+  --spacing-section-xs: 3rem; /* 48 px */
+  --spacing-section-sm: 5rem; /* 80 px */
+  --spacing-section-md: 8rem; /* 128 px */
+  --spacing-section-lg: 12rem; /* 192 px — défaut desktop */
+  --spacing-section-xl: 16rem; /* 256 px — drame */
+
+  /* Conteneurs. */
+  --container-prose: 65ch;
+  --container-narrow: 48rem;
+  --container-wide: 90rem;
+
+  /* ---- RAYONS (§3.1) — rectangulaire par défaut ------------------------ */
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* ---- MOTION (§5) — mêmes valeurs qu'exportées dans lib/motion.ts ----- */
+  --ease-fluide: cubic-bezier(0.65, 0.05, 0.36, 1);
+  --ease-drama: cubic-bezier(0.85, 0, 0.15, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --duration-short: 600ms;
+  --duration-base: 800ms;
+  --duration-long: 1000ms;
+  --duration-xlong: 1200ms;
+}
+
+/* ---------------------------------------------------------------------------
+   STYLES GLOBAUX
+   --------------------------------------------------------------------------- */
+
+html {
+  /* Smooth scrolling natif — Lenis prendra le relais au step 2. */
+  scroll-behavior: smooth;
+  /* Pas de blanc pur ailleurs que sur le papier. */
+  background-color: var(--color-paper);
+  color: var(--color-ink-soft);
+  /* Désactive l'auto-grossissement iOS au tap focus. */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  /* Antialiasing cohérent. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Coupures de mots propres pour les longs titres. */
+  text-rendering: optimizeLegibility;
+}
+
+/* Sélection — accent terre cuite très atténué. */
+::selection {
+  background-color: var(--color-terracotta);
+  color: var(--color-paper);
+}
+
+/* Focus visible — sobre, jamais le bleu navigateur. */
+:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* ---------------------------------------------------------------------------
+   UTILITAIRES DU SYSTÈME
+   --------------------------------------------------------------------------- */
+
+/* Petites capitales éditoriales — pour labels, nav, fiches techniques. */
+@utility label-caps {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-mute);
+}
+
+/* Fiche d'architecte — sous les carreaux, format/finition/matière. */
+@utility tech-spec {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-mute);
+}
+
+/* Titre display — applique les réglages éditoriaux d'un coup. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--color-ink-soft);
+}
+
+/* Numérotation de section : « 01 — » (§8). */
+@utility section-index {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.1em;
+  color: var(--color-mute);
+}
+
+/* Lien éditorial — soulignement animé en accent terre cuite. */
+@utility link-edito {
+  position: relative;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+  background-image: linear-gradient(var(--color-terracotta), var(--color-terracotta));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  padding-bottom: 2px;
+  transition: background-size var(--duration-short) var(--ease-soft);
+}
+.link-edito:hover {
+  background-size: 100% 2px;
+}
+
+/* Variante sur fond sombre — couleur paper, même soulignement terracotta. */
+@utility link-edito-inverse {
+  position: relative;
+  color: var(--color-paper-soft);
+  text-decoration: none;
+  background-image: linear-gradient(var(--color-terracotta), var(--color-terracotta));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  padding-bottom: 2px;
+  transition: background-size var(--duration-short) var(--ease-soft);
+}
+.link-edito-inverse:hover {
+  background-size: 100% 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   PLACEHOLDER DARK — variante sombre du tile-grid utilisée par SwipeSection
+   pour que l'arrière-plan derrière le rideau noir reste dans la même
+   tonalité (évite la transition gris clair → noir qui paraissait étrange).
+   --------------------------------------------------------------------------- */
+
+@utility tile-grid-dark {
+  background-color: var(--color-ink-soft);
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(246, 244, 240, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(246, 244, 240, 0.05) 1px,
+      transparent 1px
+    );
+  background-size: clamp(60px, 8vw, 96px) clamp(60px, 8vw, 96px);
+}
+
+/* ---------------------------------------------------------------------------
+   PLACEHOLDER GRAPHIQUE — quand on n'a pas encore les vraies photos.
+   Suggère le joint de carreau sans simuler une fausse image.
+   --------------------------------------------------------------------------- */
+
+@utility tile-grid {
+  background-color: var(--color-rule);
+  background-image:
+    linear-gradient(to right, rgba(26, 25, 22, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 25, 22, 0.1) 1px, transparent 1px);
+  background-size: clamp(60px, 8vw, 96px) clamp(60px, 8vw, 96px);
+}
+
+/* ---------------------------------------------------------------------------
+   ANIMATIONS HERO (§6 ligne 2, §5.3 — variées, pas tout en fade-up)
+   --------------------------------------------------------------------------- */
+
+/* Texte révélé ligne par ligne — le span enfant translateY(110%) → 0,
+   le parent overflow-hidden coupe ce qui dépasse pendant la transition. */
+@keyframes hero-line-up {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.hero-line {
+  display: block;
+  transform: translateY(110%);
+  animation: hero-line-up var(--duration-xlong) var(--ease-drama) both;
+}
+
+/* Fade-up doux pour eyebrow, lede, CTA, fiche technique. */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-fade {
+  opacity: 0;
+  animation: hero-fade-up var(--duration-long) var(--ease-fluide) both;
+}
+
+/* Image révélée par clip-path inset — démasque du bas vers le haut. */
+@keyframes hero-image-unmask {
+  from {
+    clip-path: inset(55% 0 0 0);
+    transform: scale(1.04);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+  }
+}
+
+.hero-image-mask {
+  animation: hero-image-unmask var(--duration-xlong) var(--ease-drama) 800ms both;
+}
+
+/* Indicateur de scroll — ligne verticale qui pulse en continu. */
+@keyframes hero-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.hero-pulse {
+  animation: hero-pulse 2.2s var(--ease-fluide) infinite;
+  animation-delay: 2200ms;
+}
+
+/* ---------------------------------------------------------------------------
+   MUR HEXAGONAL — §7.2 idée 3 « mur qui se carrelle ». Pointy-top régulier,
+   clip-path inscrit dans le ratio 1 : 2/√3. Variations de tons + 1 accent
+   terracotta. L'opacité/scale est pilotée par GSAP au scroll.
+   --------------------------------------------------------------------------- */
+
+.hex {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background-color: var(--color-ink-soft);
+  transform-origin: center center;
+}
+.hex[data-tone="0"] { background-color: var(--color-ink-soft); }
+.hex[data-tone="1"] { background-color: #2a2724; }
+.hex[data-tone="2"] { background-color: #3a3631; }
+.hex[data-tone="3"] { background-color: #232020; }
+.hex[data-tone="accent"] { background-color: var(--color-terracotta); }
+
+/* ---------------------------------------------------------------------------
+   CARREAU AU SURVOL (§7.2 idée 2) — léger soulèvement + ombre RÉELLE
+   + micro-rotation. Sobre, jamais excessif. Application sur device qui hover.
+   --------------------------------------------------------------------------- */
+
+.tile-hover {
+  transition:
+    transform var(--duration-base) var(--ease-fluide),
+    box-shadow var(--duration-base) var(--ease-fluide);
+  will-change: transform;
+}
+@media (hover: hover) {
+  .tile-hover:hover {
+    transform: translateY(-6px) rotate(-0.35deg);
+    box-shadow: 0 18px 40px -12px rgba(26, 25, 22, 0.22);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   REVEALS AU SCROLL — pilotés par useInView (data-revealed sur le wrapper).
+   Patrons réutilisables par toutes les sections. Pas tout en fade-up (§5.3) :
+   on alterne .reveal-line (translateY masqué) et .reveal-fade (opacité doux).
+   --------------------------------------------------------------------------- */
+
+.reveal-line {
+  display: block;
+  transform: translateY(110%);
+  transition: transform var(--duration-xlong) var(--ease-drama);
+}
+[data-revealed="true"] .reveal-line {
+  transform: translateY(0);
+}
+
+.reveal-fade {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--duration-long) var(--ease-fluide),
+    transform var(--duration-long) var(--ease-fluide);
+}
+[data-revealed="true"] .reveal-fade {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Bordure qui se trace de gauche à droite — pour les filets de section. */
+.reveal-rule {
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform var(--duration-xlong) var(--ease-drama);
+}
+[data-revealed="true"] .reveal-rule {
+  transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------------------
+   prefers-reduced-motion (§10)
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
