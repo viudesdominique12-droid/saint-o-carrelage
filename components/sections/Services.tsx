@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useInView } from "@/lib/useInView";
 import { AnimatedRule } from "@/components/AnimatedRule";
 import { BackgroundTileWall } from "@/components/BackgroundTileWall";
+import { asset } from "@/lib/asset";
 
 // §6 ligne 6 — Services · blanc · présentation éditoriale, PAS 3 cartes clones.
 // Mécanique anti-clones : alternance gauche/droite des couples texte/image (rythme
@@ -157,7 +158,7 @@ function ServiceRow({
           <div className="tile-hover relative aspect-[4/3] w-full overflow-hidden">
             {service.image && (
               <Image
-                src={service.image}
+                src={asset(service.image)}
                 alt={service.title}
                 fill
                 sizes="(min-width: 768px) 45vw, 100vw"

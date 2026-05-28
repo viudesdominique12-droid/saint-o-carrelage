@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { AnimatedRule } from "@/components/AnimatedRule";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -187,7 +188,7 @@ export function Collections() {
                   flex-1 sur desktop pour remplir l'espace dispo dans la card */}
               <div className="tile-hover relative aspect-[4/3] w-full overflow-hidden md:aspect-auto md:flex-1 md:min-h-0">
                 <Image
-                  src={c.image}
+                  src={asset(c.image)}
                   alt={c.name}
                   fill
                   sizes="(min-width: 1024px) 35vw, (min-width: 768px) 40vw, 100vw"

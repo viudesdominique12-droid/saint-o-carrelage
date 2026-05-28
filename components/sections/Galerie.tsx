@@ -6,6 +6,7 @@ import { Flip } from "gsap/Flip";
 import Image from "next/image";
 import { Ph } from "@/components/Placeholder";
 import { AnimatedRule } from "@/components/AnimatedRule";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(Flip);
 
@@ -184,7 +185,7 @@ function RealisationCard({
           }`}
         >
           <Image
-            src={r.image}
+            src={asset(r.image)}
             alt={`Réalisation ${ROOM_LABEL[r.room]}`}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"

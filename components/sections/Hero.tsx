@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Ph } from "../Placeholder";
 import { BackgroundTileWall } from "../BackgroundTileWall";
+import { asset } from "@/lib/asset";
 
 // §6 ligne 2 — Hero blanc · une promesse, un CTA, indice de scroll discret.
 // Asymétrique 6/6 desktop : texte à gauche, image macro à droite (étend jusqu'au bord).
@@ -87,7 +88,7 @@ export function Hero() {
             {/* Masque clip-path qui se lève au mount */}
             <div className="hero-image-mask absolute inset-0 overflow-hidden">
               <Image
-                src="/images/hero/main.jpg"
+                src={asset("/images/hero/main.jpg")}
                 alt="Salle de bain en carrelage marbre — réalisation"
                 fill
                 priority

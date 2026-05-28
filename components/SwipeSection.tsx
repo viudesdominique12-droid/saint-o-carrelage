@@ -4,6 +4,7 @@ import { useEffect, useRef, ReactNode } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,7 +68,7 @@ export function SwipeSection({
         <div ref={imageRef} className="absolute inset-0">
           {imageSrc && (
             <Image
-              src={imageSrc}
+              src={asset(imageSrc)}
               alt={imageAlt}
               fill
               sizes="100vw"
