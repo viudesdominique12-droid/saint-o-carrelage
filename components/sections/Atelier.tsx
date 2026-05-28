@@ -76,7 +76,7 @@ export function Atelier() {
       </div>
 
       {/* Grille principale : scène 3D + contrôles */}
-      <div className="mx-auto max-w-(--container-wide) px-6 pb-section-lg md:px-12">
+      <div className="mx-auto max-w-(--container-wide) px-6 pb-section-md md:px-12">
         <div className="grid gap-x-10 gap-y-section-sm md:grid-cols-12">
           {/* Scène 3D */}
           <div className="md:col-span-7">
