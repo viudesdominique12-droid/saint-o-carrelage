@@ -164,17 +164,30 @@ export function Collections() {
         </p>
       </div>
 
-      {/* Track : sur mobile = swipe horizontal natif avec snap-x ;
-          sur desktop = pin GSAP qui translate au scroll vertical */}
-      <div className="overflow-x-auto snap-x snap-mandatory scroll-smooth pb-section-sm md:flex-1 md:overflow-hidden md:snap-none md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <div
-          ref={trackRef}
-          className="flex h-full gap-4 px-6 md:gap-0 md:px-0"
+      {/* ===== MOBILE — swipe horizontal natif (carrousel) ===== */}
+      <div
+        className="md:hidden"
+        style={{
+          overflowX: "auto",
+          overflowY: "hidden",
+          WebkitOverflowScrolling: "touch",
+          scrollSnapType: "x mandatory",
+          scrollbarWidth: "none",
+        }}
+      >
+        <ul
+          className="flex gap-4 px-6 pb-12"
+          style={{ width: "max-content" }}
         >
           {COLLECTIONS.map((c, i) => (
-            <article
+            <li
               key={c.name}
-              className="flex shrink-0 snap-start flex-col gap-3 w-[78vw] sm:w-[60vw] md:h-full md:w-[40vw] md:max-w-[520px] md:px-6 md:py-8 md:gap-5 lg:w-[34vw]"
+              className="flex flex-col gap-3"
+              style={{
+                width: "78vw",
+                flexShrink: 0,
+                scrollSnapAlign: "start",
+              }}
             >
               <div className="flex items-baseline gap-6">
                 <span className="section-index">
@@ -183,14 +196,62 @@ export function Collections() {
                 <span className="label-caps text-mute">Famille</span>
               </div>
 
-              {/* Carreau — aspect 4/3 sur mobile, flex-1 sur desktop.
-                  bg-rule pour avoir un placeholder beige pendant le chargement. */}
-              <div className="tile-hover relative aspect-[4/3] w-full overflow-hidden bg-rule/40 md:aspect-auto md:flex-1 md:min-h-0">
+              <div className="tile-hover relative aspect-[4/3] w-full overflow-hidden bg-rule/40">
                 <Image
                   src={asset(c.image)}
                   alt={c.name}
                   fill
-                  sizes="(min-width: 1024px) 35vw, (min-width: 768px) 40vw, 80vw"
+                  sizes="78vw"
+                  className="object-cover"
+                  priority={i < 2}
+                />
+              </div>
+
+              <div>
+                <div className="flex flex-wrap items-baseline justify-between gap-3">
+                  <h3 className="display text-display-sm leading-[1.02] tracking-tight">
+                    {c.name}
+                  </h3>
+                  <a href="#" className="link-edito label-caps">
+                    Voir →
+                  </a>
+                </div>
+                <p className="tech-spec mt-2">
+                  Calepinages&nbsp;&nbsp;·&nbsp;&nbsp;{c.calepinages}
+                </p>
+                <p className="tech-spec mt-1">
+                  Finitions&nbsp;&nbsp;·&nbsp;&nbsp;{c.finitions}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ===== DESKTOP — pin GSAP qui translate au scroll vertical ===== */}
+      <div className="hidden overflow-hidden md:block md:flex-1">
+        <div
+          ref={trackRef}
+          className="flex h-full"
+        >
+          {COLLECTIONS.map((c, i) => (
+            <article
+              key={c.name}
+              className="flex h-full shrink-0 flex-col gap-5 px-6 py-8 md:w-[40vw] md:max-w-[520px] lg:w-[34vw]"
+            >
+              <div className="flex items-baseline gap-6">
+                <span className="section-index">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="label-caps text-mute">Famille</span>
+              </div>
+
+              <div className="tile-hover relative w-full flex-1 min-h-0 overflow-hidden bg-rule/40">
+                <Image
+                  src={asset(c.image)}
+                  alt={c.name}
+                  fill
+                  sizes="(min-width: 1024px) 35vw, 40vw"
                   className="object-cover"
                   priority={i < 2}
                 />
